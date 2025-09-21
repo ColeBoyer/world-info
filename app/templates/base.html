@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WorldInfo</title>
+</head>
+<body>
+    <div id="header">
+        <a href="{{ url_for('index') }}">WorldInfo</a>
+        {% if current_user.is_anonymous %}
+         - <a href="{{ url_for('login') }}">Log In</a>
+        {% else %}
+         - <a href="{{ url_for('home') }}">Home</a>
+         - <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+         - <a href="{{ url_for('logout') }}">Log Out</a>
+        {% endif %}
+        - <a href="{{ url_for('block_selector') }}">Block Selector</a>
+    </div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>World 1</h1>
+
+    <p>The world description goes here!</p>
+
+    <p>A list of projects goes here</p>
+    <a href="/project">First Project</a>
+
+    {% for project in projects %}
+        <div>
+            <p>{{ project.name }}</p>
+            <p>{{ project.desc }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

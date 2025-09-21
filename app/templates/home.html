@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Home</h1>
+    <h2>Welcome, {{ current_user.username }}.</h2>
+    {% for world in worlds %}
+    <div>
+        <h2>{{ world.name }}</h2>
+        <p>{{ world.desc }}</p>
+    </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Select Block</h1>
+    <input type="text" placeholder="type block" id="_block-selector"></input>
+    </hr>
+    <div id="block_container" style="display:none; margin-top:15px;">
+    {% for block in blocks %}
+        <div id="block_{{ block }}" style="border:solid;  width:300px; margin-top:5px; background-color:#dedede;">
+            <img src="{{ url_for('static', filename='textures/block/{}.png'.format(block)) }}" style="margin:5px;">
+            <span style="margin-bottom:5px;">{{ block }}</span>
+        </div>
+    {% endfor %}
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/block_selector.js') }}"></script>
+    <script>
+        const inputElement = document.getElementById('_block-selector');
+    </script>
+{% endblock %}

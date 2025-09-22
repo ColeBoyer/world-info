@@ -27,3 +27,7 @@ class RegistrationForm(FlaskForm):
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+class CreateWorldForm(FlaskForm):
+    world_name = StringField('world name', validators=[DataRequired()])
+    submit = SubmitField('create world')

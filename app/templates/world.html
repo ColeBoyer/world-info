@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>World 1</h1>
 
-    <p>The world description goes here!</p>
+    <h1>{{ world.name }}</h1>
+    <p>{{ world.creation_date }}</p>
 
     <p>A list of projects goes here</p>
     <a href="/project">First Project</a>

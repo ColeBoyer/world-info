@@ -46,7 +46,9 @@ class World(db.Model):
     name: so.Mapped[str] = so.mapped_column(sa.String(64))
     creation_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda : datetime.now(timezone.utc))
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+
     owner: so.Mapped[User] = so.relationship(back_populates='worlds')
+    projects: so.WriteOnlyMapped['Project'] = so.relationship(back_populates='world')
 
     def __repr__(self):
         return f"<World: {self.name}, Creation Date: {self.creation_date}, User_ID: {self.user_id}>"
@@ -54,9 +56,15 @@ class World(db.Model):
 class Project(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(64))
+    description: so.Mapped[str] = so.mapped_column(sa.String(280))
     creation_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
+
+    world: so.Mapped[World] = so.relationship(back_populates='projects')
+
+    def __repr__(self):
+        return f"<Project {self.name}, {self.description}>"
 
 @login.user_loader
 def load_user(id):

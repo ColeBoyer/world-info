@@ -4,8 +4,8 @@ import sqlalchemy as sa
 from urllib.parse import urlsplit
 from app import app
 from app import db
-from app.models import User, World
-from app.forms import LoginForm, RegistrationForm, CreateWorldForm
+from app.models import User, World, Project
+from app.forms import LoginForm, RegistrationForm, CreateWorldForm, CreateProjectForm
 
 @app.route('/')
 @app.route('/index')
@@ -18,6 +18,8 @@ def home():
     worlds = db.session.scalars( sa.select(World).where(World.user_id == current_user.get_id()).order_by(sa.desc(World.creation_date)) )
 
     return render_template('home.html', worlds=worlds)
+
+#world routes
 
 @app.route('/world')
 @login_required
@@ -34,11 +36,6 @@ def world():
     ]
     return render_template('world.html', projects=projects)
 
-@app.route('/project')
-@login_required
-def project():
-    return render_template('project.html')
-
 
 @app.route('/world/create', methods=['GET', 'POST'])
 @login_required
@@ -53,23 +50,43 @@ def create_world():
         return redirect(url_for('home'))
     return render_template('_create_world.html', form=form)
 
-@app.route('/world/view/<world_id>')
+
+@app.route('/world/view/<world_id>', methods=['GET', 'POST'])
 @login_required
 def view_world(world_id):
     world = db.first_or_404(sa.select(World).where(World.id == world_id))
-    print(world)
-    projects = [
-        {
-            'name': 'project 1',
-            'desc': 'the first project'
-        },
-        {
-            'name': 'project 2',
-            'desc': 'the second project'
-        },
-    ]
+    projects = db.session.scalars(db.select(Project).where(Project.world_id == world_id).order_by(Project.creation_date.desc()).limit(5))
     return render_template('world.html', world=world, projects=projects)
 
+#project routes
+
+@app.route('/project')
+@login_required
+def project():
+    return render_template('project.html')
+
+@app.route('/project/view/<project_id>')
+@login_required
+def view_project(project_id, methods=['GET', 'POST']):
+    project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
+    return render_template('project.html', project=project)
+
+@app.route('/project/create/<world_id>', methods=['GET', 'POST'])
+@login_required
+def create_project(world_id):
+    form = CreateProjectForm()
+    if form.validate_on_submit():
+        project = Project(name=form.project_name.data, description=form.description.data, user_id=current_user.get_id(), world_id=world_id)
+        print(project)
+        db.session.add(project)
+        db.session.commit()
+        flash(f"Congratz, {project.name} created!")
+        return redirect(url_for('project'))
+
+    return render_template('_create_project.html', form=form)
+
+
+#user routes
 
 @app.route('/user/<username>')
 @login_required
@@ -78,6 +95,8 @@ def user(username):
     worlds = db.session.scalars( sa.select(World).where(World.user_id == current_user.get_id()) )
     return render_template('user.html', user=user, worlds=worlds)
 
+
+#misc routes
 
 @app.route('/block_selector')
 def block_selector():

@@ -31,3 +31,8 @@ class RegistrationForm(FlaskForm):
 class CreateWorldForm(FlaskForm):
     world_name = StringField('world name', validators=[DataRequired()])
     submit = SubmitField('create world')
+
+class CreateProjectForm(FlaskForm):
+    project_name = StringField('project name', validators=[DataRequired()])
+    description = StringField('description', validators=[DataRequired()])
+    submit = SubmitField('create project')

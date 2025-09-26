@@ -16,8 +16,9 @@ def index():
 @login_required
 def home():
     worlds = db.session.scalars( sa.select(World).where(World.user_id == current_user.get_id()).order_by(sa.desc(World.creation_date)) )
+    projects = db.session.scalars( sa.select(Project).where(Project.user_id == current_user.get_id()).order_by(sa.desc(Project.creation_date)).limit(5) )
 
-    return render_template('home.html', worlds=worlds)
+    return render_template('home.html', worlds=worlds, projects=projects)
 
 #world routes
 
@@ -96,8 +97,38 @@ def user(username):
     return render_template('user.html', user=user, worlds=worlds)
 
 
-#misc routes
 
+"""
+app.routes.py
+
+Endpoints
+
+/ or /index
+First endpoint for new users.  Contains sign up and sign in links, a general overview of what worldinfo is, etc.
+
+/home
+Landing endpoint for users after signing in.  Get a look at their various worlds, create new worlds, etc.
+
+/world
+Endpoint for a specific world-info.  Showcases projects, contains blogs and journal posts.
+
+/project
+Endpoint for a specific project.  World-info structures have various projects.  This could be a build, a farm, a road, etc.
+
+/login
+Login endpoint
+
+/logout
+Logout endpoint
+
+/register
+Register endpoint
+
+/user/<username>
+Endpoint for a user.  Contains info about the user.  Like settings or something.  I dunno.
+"""
+
+#misc routes
 @app.route('/block_selector')
 def block_selector():
     blocks = [
@@ -1186,33 +1217,3 @@ def block_selector():
         'yellow_wool'
     ]
     return render_template('block_selector.html', blocks=blocks)
-
-"""
-app.routes.py
-
-Endpoints
-
-/ or /index
-First endpoint for new users.  Contains sign up and sign in links, a general overview of what worldinfo is, etc.
-
-/home
-Landing endpoint for users after signing in.  Get a look at their various worlds, create new worlds, etc.
-
-/world
-Endpoint for a specific world-info.  Showcases projects, contains blogs and journal posts.
-
-/project
-Endpoint for a specific project.  World-info structures have various projects.  This could be a build, a farm, a road, etc.
-
-/login
-Login endpoint
-
-/logout
-Logout endpoint
-
-/register
-Register endpoint
-
-/user/<username>
-Endpoint for a user.  Contains info about the user.  Like settings or something.  I dunno.
-"""

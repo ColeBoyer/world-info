@@ -44,11 +44,17 @@ class Post(db.Model):
 class World(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     name: so.Mapped[str] = so.mapped_column(sa.String(64))
+    description: so.Mapped[str] = so.mapped_column(sa.String(280), default='')
     creation_date: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda : datetime.now(timezone.utc))
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
 
     owner: so.Mapped[User] = so.relationship(back_populates='worlds')
     projects: so.WriteOnlyMapped['Project'] = so.relationship(back_populates='world')
+
+    def update_description(self, updated_description):
+        world = db.session.execute(db.select(World).filter_by(id=self.id)).scalar_one()
+        world.description = update_description
+        db.session.commit()
 
     def __repr__(self):
         return f"<World: {self.name}, Creation Date: {self.creation_date}, User_ID: {self.user_id}>"
@@ -62,6 +68,11 @@ class Project(db.Model):
     world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
 
     world: so.Mapped[World] = so.relationship(back_populates='projects')
+
+    def update_description(self, updated_description):
+        project = db.session.execute(db.select(Project).filter_by(id=self.id)).scalar_one()
+        project.description = update_description
+        db.session.commit()
 
     def __repr__(self):
         return f"<Project {self.name}, {self.description}>"

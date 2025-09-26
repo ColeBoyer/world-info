@@ -13,7 +13,7 @@ migrate = Migrate(app, db)
 
 #login stuff
 login = LoginManager(app)
-login.login_view = 'login'
+login.login_view = 'auth.login'
 
 #blueprints
 from app.errors import bp as errors_bp

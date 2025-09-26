@@ -10,6 +10,11 @@
             {% for error in form.world_name.errors %}
             <span style="color: red;">[{{error}}]</span>
             {% endfor %}
+            {{ form.description.label }}</br>
+            {{ form.description(size=280) }}</br>
+            {% for error in form.description.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
         </p>
         <p>{{ form.submit() }}</p>
     </form>

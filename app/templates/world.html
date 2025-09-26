@@ -4,17 +4,17 @@
 
     <h1>{{ world.name }}</h1>
     <p>{{ world.creation_date }}</p>
+    <p>{{ world.description }}</p>
 
     <h2>Create a new Project</h2>
     <a href="{{url_for('create_project', world_id=world.id)}}">Create a new project</a>
 
-    <p>A list of projects goes here</p>
+    <h2>Projects</h2>
 
     {% for project in projects %}
         <div>
-            <p>{{ project.name }}</p>
+            <a href="{{ url_for('view_project', project_id=project.id) }}">{{ project.name }}</a>
             <p>{{ project.description }}</p>
-            <a href="{{ url_for('view_project', project_id=project.id) }}">Future Link to Project</a>
         </div>
     {% endfor %}
 {% endblock %}

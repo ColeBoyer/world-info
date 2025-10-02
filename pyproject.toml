@@ -20,9 +20,13 @@ dev = [
 ]
 
 [tool.ruff]
-#Set the maximum line length to 79
-#line-length=79
 
 [tool.ruff.lint]
-#Add the 'line-too-long' rule.
-#extend-select = ["E501"]
+select = ["E", "F"]
+#Ignore E402 'Module level import not at top of file'.
+#Used by project to avoid circular imports
+
+#Ignore E501 'Line too long'.
+#Line wrapping is supported in editor.
+#Many errors come from auto-generated code.
+ignore = ["E402", "E501"]

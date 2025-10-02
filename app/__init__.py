@@ -1,6 +1,3 @@
-# ruff: noqa: E402
-#explicitly ignoring 'Module level import not at top of file' to avoid circular imports 
-
 from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy

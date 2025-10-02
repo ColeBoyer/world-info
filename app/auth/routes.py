@@ -1,7 +1,3 @@
-# ruff: noqa: E402
-#explicitly ignoring 'Module level import not at top of file' to avoid circular imports 
-
-
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa

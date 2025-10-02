@@ -8,47 +8,49 @@ from app.models import User
 from app.forms import LoginForm, RegistrationForm
 
 
-@bp.route('/login', methods=['GET', 'POST'])
+@bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for("home"))
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.session.scalar( sa.select(User).where(User.username == form.username.data) )
+        user = db.session.scalar(
+            sa.select(User).where(User.username == form.username.data)
+        )
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('auth.login'))
+            flash("Invalid username or password")
+            return redirect(url_for("auth.login"))
 
         login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        
-        if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('home')
-        
+        next_page = request.args.get("next")
+
+        if not next_page or urlsplit(next_page).netloc != "":
+            next_page = url_for("home")
+
         return redirect(next_page)
 
-    return render_template('auth/login.html', form=form)
+    return render_template("auth/login.html", form=form)
 
 
-@bp.route('/logout')
+@bp.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
 
-@bp.route('/register', methods=['GET', 'POST'])
+@bp.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
+        return redirect(url_for("home"))
 
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data, icon='default')
+        user = User(username=form.username.data, email=form.email.data, icon="default")
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratz, you are now a registered user!')
-        return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form)
+        flash("Congratz, you are now a registered user!")
+        return redirect(url_for("auth.login"))
+    return render_template("auth/register.html", form=form)

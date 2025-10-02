@@ -57,7 +57,23 @@ class World(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"<World: {self.name}, Creation Date: {self.creation_date}, User_ID: {self.user_id}>"
+        return f"<World: {self.name}, Creation Date: {self.creation_date}, User_ID: {self.user_id} - Description:{self.description}>"
+
+class WorldUpdate(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
+    text: so.Mapped[str] = so.mapped_column(sa.Text())
+
+    def __repr__(self):
+        return f"<WorldUpdate - uid:{user_id} - wid:{world_id} - text:{text}>"
+
+class WorldEvent(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
 
 class Project(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -76,6 +92,29 @@ class Project(db.Model):
 
     def __repr__(self):
         return f"<Project {self.name}, {self.description}>"
+
+class ProjectUpdate(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
+    project_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Project.id), index=True)
+    text: so.Mapped[str] = so.mapped_column(sa.Text())
+
+    def __repr__(self):
+        return f"<ProjectUpdate - uid:{user_id} - wid:{world_id} - text:{text}>"
+
+'''
+#Figure out how to handle events before creating.
+#I.e., are we storing them as an enum, str, etc.
+class ProjectEvent(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
+    world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
+    project_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Project.id), index=True)
+    event: so.Mapped[???]
+'''
 
 @login.user_loader
 def load_user(id):

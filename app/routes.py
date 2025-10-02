@@ -15,8 +15,21 @@ def index():
 @app.route('/home')
 @login_required
 def home():
-    worlds = db.session.scalars( sa.select(World).where(World.user_id == current_user.get_id()).order_by(sa.desc(World.creation_date)) )
-    projects = db.session.scalars( sa.select(Project).where(Project.user_id == current_user.get_id()).order_by(sa.desc(Project.creation_date)).limit(5) )
+    #get all worlds as a list
+    worlds = db.session.scalars( \
+        sa.select(World) \
+        .where(World.user_id == current_user.get_id()) \
+        .order_by(sa.desc(World.creation_date)) \
+        .limit(5) ) \
+        .all()
+    #get all projects as a list
+    projects = db.session.scalars( \
+        sa.select(Project) \
+        .where(Project.user_id == current_user.get_id()) \
+        .order_by(sa.desc(Project.creation_date)) \
+        .limit(5) ) \
+        .all()
+
 
     return render_template('home.html', worlds=worlds, projects=projects)
 
@@ -43,7 +56,7 @@ def world():
 def create_world():
     form = CreateWorldForm()
     if form.validate_on_submit():
-        world = World(name=form.world_name.data, user_id=current_user.get_id())
+        world = World(name=form.world_name.data, user_id=current_user.get_id(), description=form.description.data)
         print(world)
         db.session.add(world)
         db.session.commit()
@@ -56,6 +69,7 @@ def create_world():
 @login_required
 def view_world(world_id):
     world = db.first_or_404(sa.select(World).where(World.id == world_id))
+    print(world)
     projects = db.session.scalars(db.select(Project).where(Project.world_id == world_id).order_by(Project.creation_date.desc()).limit(5))
     return render_template('world.html', world=world, projects=projects)
 

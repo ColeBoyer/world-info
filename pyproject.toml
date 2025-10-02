@@ -1,7 +1,7 @@
 [project]
 name = "world-info"
 version = "0.1.0"
-description = "Add your description here"
+description = "Minecraft World Repository"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [

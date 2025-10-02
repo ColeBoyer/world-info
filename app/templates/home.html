@@ -5,6 +5,10 @@
     <h2>Welcome, {{ current_user.username }}.</h2>
     <hr>
     <h1>Recent Worlds</h1>
+    {% if not worlds %}
+        <p>It looks like there is nothing here...</p>
+        <a href="{{ url_for('create_world') }}">Click here to create your first world!</a>
+    {% endif %}
     {% for world in worlds %}
     <div>
         <h2>{{ world.name }}</h2>
@@ -14,6 +18,9 @@
     {% endfor %}
     <hr>
     <h1>Recent Projects</h1>
+    {% if not projects %}
+        <p>It looks like there is nothing here...</p>
+    {% endif %}
     {% for project in projects %}
     <div>
         <h2>{{ project.name }}</h2>

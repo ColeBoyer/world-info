@@ -1,8 +1,15 @@
+# ruff: noqa: E402
+#explicitly ignoring 'Module level import not at top of file' to avoid circular imports 
+
 from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+
+#blueprints
+
+#app specific
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -21,4 +28,4 @@ app.register_blueprint(errors_bp)
 from app.auth import bp as auth_bp
 app.register_blueprint(auth_bp, url_prefix='/auth')
 
-from app import routes, models
+from app import routes as routes, models as models

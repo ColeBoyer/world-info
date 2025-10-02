@@ -6,9 +6,6 @@ uv run flask --env-file .flaskenv run
 Main class that contains server information about worldinfo.  This includes the relevant endpoints.
 
 """
-
-from app import app
-
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from app import app, db

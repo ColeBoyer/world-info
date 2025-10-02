@@ -1,8 +1,11 @@
+# ruff: noqa: E402
+#explicitly ignoring 'Module level import not at top of file' to avoid circular imports 
+
+
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_user, logout_user, login_required
 import sqlalchemy as sa
 from urllib.parse import urlsplit
-from app import app
 from app import db
 from app.auth import bp
 from app.models import User
@@ -33,6 +36,7 @@ def login():
 
 
 @bp.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))

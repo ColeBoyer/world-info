@@ -53,11 +53,11 @@ class World(db.Model):
 
     def update_description(self, updated_description):
         world = db.session.execute(db.select(World).filter_by(id=self.id)).scalar_one()
-        world.description = update_description
+        world.description = updated_description
         db.session.commit()
 
     def __repr__(self):
-        return f"<World: {self.name}, Creation Date: {self.creation_date}, User_ID: {self.user_id} - Description:{self.description}>"
+        return f"<World: {self.name} - {self.creation_date} - Description:{self.description}>"
 
 class WorldUpdate(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
@@ -67,12 +67,11 @@ class WorldUpdate(db.Model):
     text: so.Mapped[str] = so.mapped_column(sa.Text())
 
     def __repr__(self):
-        return f"<WorldUpdate - uid:{user_id} - wid:{world_id} - text:{text}>"
+        return f"<WorldUpdate - uid:{self.user_id} - wid:{self.world_id} - text:{self.text}>"
 
 class WorldEvent(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
-    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
 
 class Project(db.Model):
@@ -87,7 +86,7 @@ class Project(db.Model):
 
     def update_description(self, updated_description):
         project = db.session.execute(db.select(Project).filter_by(id=self.id)).scalar_one()
-        project.description = update_description
+        project.description = updated_description
         db.session.commit()
 
     def __repr__(self):
@@ -102,7 +101,7 @@ class ProjectUpdate(db.Model):
     text: so.Mapped[str] = so.mapped_column(sa.Text())
 
     def __repr__(self):
-        return f"<ProjectUpdate - uid:{user_id} - wid:{world_id} - text:{text}>"
+        return f"<ProjectUpdate - uid:{self.user_id} - wid:{self.world_id} - text:{self.text}>"
 
 '''
 #Figure out how to handle events before creating.
@@ -110,7 +109,6 @@ class ProjectUpdate(db.Model):
 class ProjectEvent(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     timestamp: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
-    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
     project_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Project.id), index=True)
     event: so.Mapped[???]

@@ -11,7 +11,7 @@
                 <span style="color: red;">[{{error}}]</span>
             {% endfor %}
             {{ form.description.label}}</br>
-            {{ form.description(size=280)}}</br>
+            {{ form.description(rows=4, cols=64, style="resize: none;")}}</br>
             {% for error in form.description.errors %}
                 <span style="color: red;">[{{error}}]</span>
             {% endfor %}

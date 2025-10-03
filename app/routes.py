@@ -80,19 +80,12 @@ def view_world(world_id):
 
 
 # project routes
-
-
-@app.route("/project")
-@login_required
-def project():
-    return render_template("project.html")
-
-
 @app.route("/project/view/<project_id>")
 @login_required
 def view_project(project_id, methods=["GET", "POST"]):
     project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
-    return render_template("project.html", project=project)
+    world = db.first_or_404(sa.select(World).where(World.id == project.world_id))
+    return render_template("project.html", project=project, world=world)
 
 
 @app.route("/project/create/<world_id>", methods=["GET", "POST"])
@@ -110,7 +103,7 @@ def create_project(world_id):
         db.session.add(project)
         db.session.commit()
         flash(f"Congratz, {project.name} created!")
-        return redirect(url_for("project"))
+        return redirect(url_for("view_project", project_id=project.id))
 
     return render_template("_create_project.html", form=form)
 

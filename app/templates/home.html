@@ -8,6 +8,8 @@
     {% if not worlds %}
         <p>It looks like there is nothing here...</p>
         <a href="{{ url_for('create_world') }}">Click here to create your first world!</a>
+    {% else %}
+        <a href="{{ url_for('create_world') }}">Create a new world.</a>
     {% endif %}
     {% for world in worlds %}
     <div>

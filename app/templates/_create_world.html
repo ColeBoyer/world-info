@@ -10,9 +10,16 @@
             {% for error in form.world_name.errors %}
             <span style="color: red;">[{{error}}]</span>
             {% endfor %}
+
             {{ form.description.label }}</br>
-            {{ form.description(size=280) }}</br>
+            {{ form.description() }}</br>
             {% for error in form.description.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+
+        {{ form.world_type.label }}</br>
+            {{ form.world_type() }}</br>
+            {% for error in form.world_type.errors %}
                 <span style="color: red;">[{{error}}]</span>
             {% endfor %}
         </p>

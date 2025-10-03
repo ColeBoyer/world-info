@@ -1,5 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
+from wtforms import (
+    StringField,
+    PasswordField,
+    BooleanField,
+    SubmitField,
+    TextAreaField,
+    SelectField,
+)
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 import sqlalchemy as sa
 from app import db
@@ -38,6 +45,11 @@ class CreateWorldForm(FlaskForm):
     description = TextAreaField(
         "world description", validators=[DataRequired(), Length(min=0, max=280)]
     )
+    world_type = SelectField(
+        "World Type",
+        choices=["Single Player", "Multi Player"],
+        validators=[DataRequired()],
+    )
     submit = SubmitField("create world")
 
 
@@ -45,7 +57,7 @@ class CreateProjectForm(FlaskForm):
     project_name = StringField(
         "project name", validators=[DataRequired(), Length(min=1, max=64)]
     )
-    description = StringField(
+    description = TextAreaField(
         "description", validators=[DataRequired(), Length(min=1, max=280)]
     )
     submit = SubmitField("create project")

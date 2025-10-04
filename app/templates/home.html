@@ -13,9 +13,8 @@
     {% endif %}
     {% for world in worlds %}
     <div>
-        <h2>{{ world.name }}</h2>
-        <p>{{ world.creation_date.strftime('%Y-%m-%d') }}</p>
-        <a href="{{ url_for('view_world', world_id=world.id) }}">View {{world.name}}</a>
+        <h2><a href="{{ url_for('view_world', world_id=world.id) }}">{{ world.name }}</a></h2>
+        <p>Created: {{ moment(world.creation_date).format('L') }}</p>
     </div>
     {% endfor %}
     <hr>
@@ -25,10 +24,9 @@
     {% endif %}
     {% for project in projects %}
     <div>
-        <h2>{{ project.name }}</h2>
+        <h2><a href="{{ url_for('view_project', project_id=project.id) }}">{{ project.name }}</a></h2>
         <a href="{{ url_for('view_world', world_id=project.world.id) }}">{{ project.world.name }}</a>
-        <p>{{ project.creation_date.strftime('%Y-%m-%d') }}</p>
-        <a href="{{ url_for('view_project', project_id=project.id) }}">View {{project.name}}</a>
+        <p>Created: {{ moment(project.creation_date).format('L') }}</p>
         <p>{{ project.description }}</p>
     </div>
     {% endfor %}

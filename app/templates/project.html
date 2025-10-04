@@ -10,10 +10,20 @@
     <br>
     <p>Project Status</p>
     <hr>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.text.label }}</br>
+            {{ form.text(rows=4, cols=64, style="resize:none;") }}</br>
+            {% for error in form.text.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
     <h2>Project Timeline</h2>
-    <p>Post Update</p>
-    {% for event in events %}
-        <p> {{ event.event }} </p>
-        <small>{{ event.timestamp.strftime('%Y-%m-%d') }}</small>
+    {% for object in timeline %}
+        <p> {{ object.text }} </p>
+        <p> {{ moment(object.timestamp).fromNow() }}</p>
     {% endfor %}
 {% endblock %}

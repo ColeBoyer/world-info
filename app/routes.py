@@ -1,10 +1,11 @@
+from heapq import merge
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_required
 import sqlalchemy as sa
 from app import app
 from app import db
-from app.models import User, World, Project, ProjectEvent
-from app.forms import CreateWorldForm, CreateProjectForm
+from app.models import User, World, Project, ProjectEvent, ProjectUpdate
+from app.forms import CreateWorldForm, CreateProjectForm, ProjectUpdateForm
 
 
 @app.route("/")
@@ -80,13 +81,47 @@ def view_world(world_id):
 
 
 # project routes
-@app.route("/project/view/<project_id>")
+@app.route("/project/view/<project_id>", methods=["GET", "POST"])
 @login_required
-def view_project(project_id, methods=["GET", "POST"]):
+def view_project(project_id):
     project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
+
+    form = ProjectUpdateForm()
+    if form.validate_on_submit():
+        # create project update
+        project_update = ProjectUpdate(
+            user_id=current_user.get_id(),
+            world_id=project.world_id,
+            project_id=project_id,
+            text=form.text.data,
+        )
+        print(project_update)
+        db.session.add(project_update)
+        db.session.commit()
+        return redirect(url_for("view_project", project_id=project_id))
+
     world = db.first_or_404(sa.select(World).where(World.id == project.world_id))
-    events = db.session.scalars(db.select(ProjectEvent).where(ProjectEvent.project_id==project_id).order_by(ProjectEvent.timestamp))
-    return render_template("project.html", project=project, world=world, events=events)
+    events = db.session.scalars(
+        db.select(ProjectEvent)
+        .where(ProjectEvent.project_id == project_id)
+        .order_by(ProjectEvent.timestamp)
+    ).all()
+    updates = db.session.scalars(
+        db.select(ProjectUpdate)
+        .where(ProjectUpdate.project_id == project_id)
+        .order_by(ProjectUpdate.timestamp)
+    ).all()
+    #Creates a timeline based on events and updates.
+    #Since the first listed item should be the newest and not the oldest, we use list slicing to reverse the list.
+    timeline = list(merge(events, updates))[::-1]
+    print(timeline)
+    return render_template(
+        "project.html",
+        project=project,
+        world=world,
+        timeline=timeline,
+        form=form,
+    )
 
 
 @app.route("/project/create/<world_id>", methods=["GET", "POST"])
@@ -94,7 +129,7 @@ def view_project(project_id, methods=["GET", "POST"]):
 def create_project(world_id):
     form = CreateProjectForm()
     if form.validate_on_submit():
-        #create project
+        # create project
         project = Project(
             name=form.project_name.data,
             description=form.description.data,
@@ -104,8 +139,10 @@ def create_project(world_id):
         print(project)
         db.session.add(project)
         db.session.commit()
-        #create project event
-        project_created_event = ProjectEvent(world_id=world_id, project_id=project.id, event="Project Created!")
+        # create project event
+        project_created_event = ProjectEvent(
+            world_id=world_id, project_id=project.id, text="Project Created!"
+        )
         print(project_created_event)
         db.session.add(project_created_event)
         db.session.commit()
@@ -120,7 +157,7 @@ def create_project(world_id):
 @login_required
 def delete_project(project_id):
     project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
-    project.delete()
+    db.session.delete(project)
     db.session.commit()
 
     return render_template("_delete_project.html", project=project)

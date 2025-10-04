@@ -111,8 +111,8 @@ def view_project(project_id):
         .where(ProjectUpdate.project_id == project_id)
         .order_by(ProjectUpdate.timestamp)
     ).all()
-    #Creates a timeline based on events and updates.
-    #Since the first listed item should be the newest and not the oldest, we use list slicing to reverse the list.
+    # Creates a timeline based on events and updates.
+    # Since the first listed item should be the newest and not the oldest, we use list slicing to reverse the list.
     timeline = list(merge(events, updates))[::-1]
     print(timeline)
     return render_template(

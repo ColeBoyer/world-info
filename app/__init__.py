@@ -12,7 +12,7 @@ from flask_moment import Moment
 app = Flask(__name__)
 app.config.from_object(Config)
 
-#moment stuff
+# moment stuff
 moment = Moment(app)
 
 # db stuff

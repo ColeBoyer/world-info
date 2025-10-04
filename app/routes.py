@@ -3,7 +3,7 @@ from flask_login import current_user, login_required
 import sqlalchemy as sa
 from app import app
 from app import db
-from app.models import User, World, Project
+from app.models import User, World, Project, ProjectEvent
 from app.forms import CreateWorldForm, CreateProjectForm
 
 
@@ -85,7 +85,8 @@ def view_world(world_id):
 def view_project(project_id, methods=["GET", "POST"]):
     project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
     world = db.first_or_404(sa.select(World).where(World.id == project.world_id))
-    return render_template("project.html", project=project, world=world)
+    events = db.session.scalars(db.select(ProjectEvent).where(ProjectEvent.project_id==project_id).order_by(ProjectEvent.timestamp))
+    return render_template("project.html", project=project, world=world, events=events)
 
 
 @app.route("/project/create/<world_id>", methods=["GET", "POST"])
@@ -93,6 +94,7 @@ def view_project(project_id, methods=["GET", "POST"]):
 def create_project(world_id):
     form = CreateProjectForm()
     if form.validate_on_submit():
+        #create project
         project = Project(
             name=form.project_name.data,
             description=form.description.data,
@@ -102,10 +104,26 @@ def create_project(world_id):
         print(project)
         db.session.add(project)
         db.session.commit()
+        #create project event
+        project_created_event = ProjectEvent(world_id=world_id, project_id=project.id, event="Project Created!")
+        print(project_created_event)
+        db.session.add(project_created_event)
+        db.session.commit()
+
         flash(f"Congratz, {project.name} created!")
         return redirect(url_for("view_project", project_id=project.id))
 
     return render_template("_create_project.html", form=form)
+
+
+@app.route("/project/delete/<project_id>", methods=["GET", "POST"])
+@login_required
+def delete_project(project_id):
+    project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
+    project.delete()
+    db.session.commit()
+
+    return render_template("_delete_project.html", project=project)
 
 
 # user routes

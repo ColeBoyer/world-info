@@ -4,4 +4,9 @@
     <h1>World Info</h1>
 
     <p>Welcome to World Info.  We are a respository of Minecraft worlds and information about them!</p>
+
+    <p>Need an account?  <a href="{{ url_for('auth.register') }}">Click here to register!</a></p>
+
+    <p>Once logged in, <a href="{{ url_for('home') }}">click here</a> to check out your worlds and projects.</p>
+
 {% endblock %}

@@ -86,19 +86,7 @@ def view_world(world_id):
 def view_project(project_id):
     project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
 
-    form = ProjectUpdateForm()
-    if form.validate_on_submit():
-        # create project update
-        project_update = ProjectUpdate(
-            user_id=current_user.get_id(),
-            world_id=project.world_id,
-            project_id=project_id,
-            text=form.text.data,
-        )
-        print(project_update)
-        db.session.add(project_update)
-        db.session.commit()
-        return redirect(url_for("view_project", project_id=project_id))
+    update_project_form = ProjectUpdateForm()
 
     world = db.first_or_404(sa.select(World).where(World.id == project.world_id))
     events = db.session.scalars(
@@ -120,8 +108,29 @@ def view_project(project_id):
         project=project,
         world=world,
         timeline=timeline,
-        form=form,
+        form=update_project_form,
     )
+
+
+@app.route("/project/update/<project_id>", methods=["GET", "POST"])
+@login_required
+def update_project(project_id):
+    project = db.first_or_404(sa.select(Project).where(Project.id == project_id))
+    form = ProjectUpdateForm()
+    if form.validate_on_submit():
+        # create project update
+        project_update = ProjectUpdate(
+            user_id=current_user.get_id(),
+            world_id=project.world_id,
+            project_id=project_id,
+            text=form.text.data,
+        )
+        print(project_update)
+        db.session.add(project_update)
+        db.session.commit()
+        return redirect(url_for("view_project", project_id=project_id))
+
+    return redirect(url_for("view_project", project_id=project_id))
 
 
 @app.route("/project/create/<world_id>", methods=["GET", "POST"])

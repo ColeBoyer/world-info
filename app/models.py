@@ -8,6 +8,7 @@ from flask_login import UserMixin
 
 from app import db
 from app import login
+from app.utils import ProjectStatus
 
 
 class User(db.Model, UserMixin):
@@ -72,6 +73,8 @@ class Project(db.Model):
     creation_date: so.Mapped[datetime] = so.mapped_column(
         index=True, default=lambda: datetime.now(timezone.utc)
     )
+    status: so.Mapped[int] = so.mapped_column(default=ProjectStatus.PENDING.value)
+
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)
 

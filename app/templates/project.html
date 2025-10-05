@@ -10,15 +10,12 @@
     <br>
     <p>Project Status</p>
     <hr>
-    <form action="" method="post">
+    <form action="{{ url_for('update_project', project_id=project.id) }}" method="post">
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.text.label }}</br>
-            {{ form.text(rows=4, cols=64, style="resize:none;") }}</br>
-            {% for error in form.text.errors %}
-                <span style="color: red;">[{{error}}]</span>
-            {% endfor %}
-        </p>
+        {{ form.text(rows=4, cols=64, style="resize:none;", placeholder="update?") }}</br>
+        {% for error in form.text.errors %}
+            <span style="color: red;">[{{error}}]</span>
+        {% endfor %}
         <p>{{ form.submit() }}</p>
     </form>
     <h2>Project Timeline</h2>

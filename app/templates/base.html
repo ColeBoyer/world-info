@@ -10,15 +10,15 @@
 </head>
 <body data-bs-theme="dark" style="margin:1vw;">
     <div id="header">
-        <a href="{{ url_for('index') }}">WorldInfo</a>
+        <a href="{{ url_for('main.index') }}">WorldInfo</a>
         {% if current_user.is_anonymous %}
          - <a href="{{ url_for('auth.login') }}">Log In</a>
         {% else %}
-         - <a href="{{ url_for('home') }}">Home</a>
-         - <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+         - <a href="{{ url_for('main.home') }}">Home</a>
+         - <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
          - <a href="{{ url_for('auth.logout') }}">Log Out</a>
         {% endif %}
-         <!--a href="{{ url_for('block_selector') }}">Block Selector</a-->
+         <!--a href="{{ url_for('main.block_selector') }}">Block Selector</a-->
     </div>
     <hr>
     {% with messages = get_flashed_messages() %}

@@ -4,7 +4,7 @@
 
     <img src="{{ url_for('static', filename='textures/{}'.format(project.icon_url)) }}" width="48" style="float:left; margin-right:16px; margin-top:0px; border:solid; border-radius:16px; border-color:navajowhite;">
     <h1>{{ project.name }}</h1 style="position:relative;">
-    <small style="color:#aaa;">A project on <a href="{{ url_for('view_world', world_id=world.id) }}">{{ world.name }}</a> </small>
+    <small style="color:#aaa;">A project on <a href="{{ url_for('main.view_world', world_id=world.id) }}">{{ world.name }}</a> </small>
 
     <br><br>
     <h2>Description</h2>
@@ -13,7 +13,7 @@
     <br>
     <h2>Status</h2>
     <hr>
-    <form action="{{ url_for('update_project', project_id=project.id) }}" method="post">
+    <form action="{{ url_for('main.update_project', project_id=project.id) }}" method="post">
         {{ form.hidden_tag() }}
         {{ form.text(rows=4, cols=64, style="resize:none;", placeholder="update?") }}</br>
         {% for error in form.text.errors %}

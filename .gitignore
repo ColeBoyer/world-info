@@ -9,5 +9,8 @@ wheels/
 # Virtual environments
 .venv
 
+# Non-Virtual environments
+.env
+
 #db stuff
 app.db

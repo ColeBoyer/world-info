@@ -5,13 +5,13 @@ from urllib.parse import urlsplit
 from app import db
 from app.auth import bp
 from app.models import User
-from app.forms import LoginForm, RegistrationForm
+from app.main.forms import LoginForm, RegistrationForm
 
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -26,7 +26,7 @@ def login():
         next_page = request.args.get("next")
 
         if not next_page or urlsplit(next_page).netloc != "":
-            next_page = url_for("home")
+            next_page = url_for("main.home")
 
         return redirect(next_page)
 
@@ -37,13 +37,13 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("main.index"))
 
 
 @bp.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for("home"))
+        return redirect(url_for("main.home"))
 
     form = RegistrationForm()
     if form.validate_on_submit():

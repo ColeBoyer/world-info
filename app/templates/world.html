@@ -7,14 +7,14 @@
     <p>{{ world.description }}</p>
 
     <h4>Create a new Project</h4>
-    <a href="{{url_for('create_project', world_id=world.id)}}">Create a new project</a>
+    <a href="{{url_for('main.create_project', world_id=world.id)}}">Create a new project</a>
 
     <hr>
     <h2>Projects</h2>
 
     {% for project in projects %}
         <div>
-            <a href="{{ url_for('view_project', project_id=project.id) }}">{{ project.name }}</a>
+            <a href="{{ url_for('main.view_project', project_id=project.id) }}">{{ project.name }}</a>
             <p>{{ project.description }}</p>
 
         </div>

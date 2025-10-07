@@ -74,6 +74,7 @@ class Project(db.Model):
         index=True, default=lambda: datetime.now(timezone.utc)
     )
     status: so.Mapped[int] = so.mapped_column(default=ProjectStatus.PENDING.value)
+    icon_url: so.Mapped[str] = so.mapped_column(sa.String(64), default="block/grass_block_side.png")
 
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
     world_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(World.id), index=True)

@@ -8,6 +8,7 @@ from app.models import User, World, Project, ProjectEvent, ProjectUpdate
 from app.forms import CreateWorldForm, CreateProjectForm, ProjectUpdateForm
 
 
+# main routes
 @app.route("/")
 @app.route("/index")
 def index():
@@ -17,14 +18,14 @@ def index():
 @app.route("/home")
 @login_required
 def home():
-    # get all worlds as a list
+    # get 5 most recent worlds as a list
     worlds = db.session.scalars(
         sa.select(World)
         .where(World.user_id == current_user.get_id())
         .order_by(sa.desc(World.creation_date))
         .limit(5)
     ).all()
-    # get all projects as a list
+    # get 5 most recent projects as a list
     projects = db.session.scalars(
         sa.select(Project)
         .where(Project.user_id == current_user.get_id())
@@ -36,8 +37,6 @@ def home():
 
 
 # world routes
-
-
 @app.route("/world")
 @login_required
 def world():
@@ -128,7 +127,6 @@ def update_project(project_id):
         print(project_update)
         db.session.add(project_update)
         db.session.commit()
-        return redirect(url_for("view_project", project_id=project_id))
 
     return redirect(url_for("view_project", project_id=project_id))
 
@@ -173,8 +171,6 @@ def delete_project(project_id):
 
 
 # user routes
-
-
 @app.route("/user/<username>")
 @login_required
 def user(username):
@@ -195,6 +191,9 @@ First endpoint for new users.  Contains sign up and sign in links, a general ove
 
 /home
 Landing endpoint for users after signing in.  Get a look at their various worlds, create new worlds, etc.
+
+/explore
+Endpoint for viewing other players worlds and projects.  Right now a bit difficult to test out.
 
 /world
 Endpoint for a specific world-info.  Showcases projects, contains blogs and journal posts.

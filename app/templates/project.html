@@ -1,14 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>{{ project.name }}</h1>
 
+    <img src="{{ url_for('static', filename='textures/{}'.format(project.icon_url)) }}" width="48" style="float:left; margin-right:16px; margin-top:0px; border:solid; border-radius:16px; border-color:navajowhite;">
+    <h1>{{ project.name }}</h1 style="position:relative;">
+    <small style="color:#aaa;">A project on <a href="{{ url_for('view_world', world_id=world.id) }}">{{ world.name }}</a> </small>
+
+    <br><br>
+    <h2>Description</h2>
     <p>{{ project.description }}</p>
-
-    <a href="{{ url_for('view_world', world_id=world.id) }}">Return to {{ world.name }} </a>
     <br>
     <br>
-    <p>Project Status</p>
+    <h2>Status</h2>
     <hr>
     <form action="{{ url_for('update_project', project_id=project.id) }}" method="post">
         {{ form.hidden_tag() }}
@@ -19,8 +22,8 @@
         <p>{{ form.submit() }}</p>
     </form>
     <h2>Project Timeline</h2>
-    {% for object in timeline %}
-        <p> {{ object.text }} </p>
-        <p> {{ moment(object.timestamp).fromNow() }}</p>
+    {% for notification in timeline %}
+        {{ notification.text }}<br>
+        <small style="color:#aaa;"> {{ moment(notification.timestamp).fromNow() }}</small><br><br>
     {% endfor %}
 {% endblock %}

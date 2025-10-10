@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <img src="{{ url_for('static', filename='textures/{}'.format(project.icon_url)) }}" width="48" style="float:left; margin-right:16px; margin-top:0px; border:solid; border-radius:16px; border-color:navajowhite;">
+    <img src="{{ url_for('static', filename='textures/{}'.format(project.icon_url)) }}" style="width: 48px; float:left; margin-right:16px; margin-top:0px; border:solid; border-radius:16px; border-color:navajowhite;">
     <h1>{{ project.name }}</h1 style="position:relative;">
     <small style="color:#aaa;">A project on <a href="{{ url_for('main.view_world', world_id=world.id) }}">{{ world.name }}</a> </small>
 

@@ -5,11 +5,10 @@
     <h1>User: {{user.username}}</h1>
     <img src="{{ url_for('static', filename='textures/{}.png'.format(user.icon)) }}" width=64 height=64>
     <hr>
+    <h2>Latest Worlds</h2>
     {% for world in worlds %}
-    <h2>{{world.name}}</h2>
-    <p>{{world.desc}}</p>
+        {% include '_world_stub.html' %}
     {% endfor %}
-    <h2>Latest World</h2>
     <h2>Latest Project</h2>
 
 {% endblock %}

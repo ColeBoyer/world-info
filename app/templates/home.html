@@ -9,13 +9,10 @@
         <p>It looks like there is nothing here...</p>
         <a href="{{ url_for('main.create_world') }}">Click here to create your first world!</a>
     {% else %}
-        <a href="{{ url_for('main.create_world') }}">Create a new world.</a>
+        <small><a href="{{ url_for('main.create_world') }}">Create a new world.</a></small>
     {% endif %}
     {% for world in worlds %}
-    <div>
-        <h2><a href="{{ url_for('main.view_world', world_id=world.id) }}">{{ world.name }}</a></h2>
-        <p>Created: {{ moment(world.creation_date).format('L') }}</p>
-    </div>
+        {% include '_world_stub.html' %}
     {% endfor %}
     <hr>
     <h1>Recent Projects</h1>
@@ -23,11 +20,6 @@
         <p>It looks like there is nothing here...</p>
     {% endif %}
     {% for project in projects %}
-    <div>
-        <h2><a href="{{ url_for('main.view_project', project_id=project.id) }}">{{ project.name }}</a></h2>
-        <a href="{{ url_for('main.view_world', world_id=project.world.id) }}">{{ project.world.name }}</a>
-        <p>Created: {{ moment(project.creation_date).format('L') }}</p>
-        <p>{{ project.description }}</p>
-    </div>
+        {% include "_project_stub.html" %}
     {% endfor %}
 {% endblock %}
